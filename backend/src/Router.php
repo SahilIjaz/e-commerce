@@ -42,9 +42,6 @@ class Router
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        // Remove /api prefix if present
-        $requestPath = str_replace('/api', '', $requestPath);
-
         foreach ($this->routes as $route) {
             if ($this->matchRoute($requestMethod, $requestPath, $route)) {
                 $this->executeRoute($route);
@@ -54,7 +51,7 @@ class Router
 
         // Route not found
         http_response_code(404);
-        echo json_encode(['error' => 'Route not found']);
+        echo json_encode(['error' => 'Route not found', 'path' => $requestPath, 'method' => $requestMethod]);
     }
 
     private function matchRoute($method, $path, $route)

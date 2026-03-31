@@ -10,10 +10,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// Define MongoDB namespace mock classes BEFORE autoload
+if (!class_exists('MongoDB\BSON\UTCDateTime')) {
+    class MongoDB_BSON_UTCDateTime extends \DateTime {}
+    class MongoDB_BSON_ObjectId {
+        public $oid;
+        public function __construct($id = null) {
+            $this->oid = $id ?: uniqid();
+        }
+        public function __toString() {
+            return $this->oid;
+        }
+    }
+}
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 use App\Router;
+
+// Create global namespace aliases for MongoDB classes
+if (!function_exists('MongoDB\\BSON\\ObjectId')) {
+    if (!class_exists('MongoDB\\BSON\\UTCDateTime')) {
+        class_alias('MongoDB_BSON_UTCDateTime', 'MongoDB\\BSON\\UTCDateTime');
+    }
+    if (!class_exists('MongoDB\\BSON\\ObjectId')) {
+        class_alias('MongoDB_BSON_ObjectId', 'MongoDB\\BSON\\ObjectId');
+    }
+}
 
 // Load environment variables
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');

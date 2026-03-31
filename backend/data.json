@@ -1,0 +1,91 @@
+{
+    "users": [],
+    "products": [
+        {
+            "_id": "id_1_1774965896",
+            "name": "iPhone 14",
+            "description": "Latest Apple smartphone with amazing features",
+            "price": 999.99,
+            "stock": 50,
+            "category": "Electronics",
+            "images": [
+                "https://via.placeholder.com/400?text=iPhone+14"
+            ],
+            "rating": 4.5,
+            "seller": "anonymous",
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-03-31 14:04:56.606766",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        },
+        {
+            "_id": "id_2_1774965900",
+            "name": "Samsung Galaxy S23",
+            "description": "Premium Android smartphone with 5G support",
+            "price": 899.99,
+            "stock": 30,
+            "category": "Electronics",
+            "images": [
+                "https://via.placeholder.com/400?text=Samsung+S23"
+            ],
+            "rating": 4.3,
+            "seller": "anonymous",
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-03-31 14:04:56.606766",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        },
+        {
+            "_id": "id_3_1774965904",
+            "name": "MacBook Pro 16",
+            "description": "Powerful laptop for professionals and developers",
+            "price": 2499.99,
+            "stock": 15,
+            "category": "Electronics",
+            "images": [
+                "https://via.placeholder.com/400?text=MacBook+Pro"
+            ],
+            "rating": 4.8,
+            "seller": "anonymous",
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-03-31 14:04:56.606766",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        },
+        {
+            "_id": "id_4_1774965908",
+            "name": "Wireless Earbuds",
+            "description": "High quality noise cancelling wireless earbuds",
+            "price": 199.99,
+            "stock": 100,
+            "category": "Electronics",
+            "images": [
+                "https://via.placeholder.com/400?text=Wireless+Earbuds"
+            ],
+            "rating": 4.2,
+            "seller": "anonymous",
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-03-31 14:04:56.606766",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        }
+    ],
+    "orders": [],
+    "carts": [],
+    "categories": [
+        {
+            "_id": "cat_1",
+            "name": "Electronics",
+            "description": "Electronic products",
+            "icon": "\ud83d\udcf1"
+        }
+    ]
+}

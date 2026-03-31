@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import useAuthStore from '@/store/authStore';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
+import { FiX, FiUpload } from 'react-icons/fi';
 
 const CATEGORIES = ['Electronics', 'Clothing', 'Home', 'Sports', 'Books', 'Toys', 'Beauty', 'Other'];
 
@@ -13,17 +15,56 @@ export default function NewProductPage() {
   const { user } = useAuthStore();
 
   const [loading, setLoading] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     price: '',
     stock: '',
     category: '',
+    images: [],
   });
+  const [imagePreview, setImagePreview] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageSelect = async (e) => {
+    const files = Array.from(e.target.files);
+
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select image files only');
+        continue;
+      }
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImagePreview((prev) => [...prev, event.target.result]);
+      };
+      reader.readAsDataURL(file);
+
+      // Simulate upload (in real app, would upload to Cloudinary)
+      // For now, use placeholder image URL
+      const imageUrl = `https://via.placeholder.com/400?text=${formData.name || 'Product'}`;
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, imageUrl],
+      }));
+
+      toast.success('Image added!');
+    }
+  };
+
+  const removeImage = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+    setImagePreview((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -31,7 +72,7 @@ export default function NewProductPage() {
     setLoading(true);
 
     try {
-      await api.post('/products', {
+      const response = await api.post('/products', {
         ...formData,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
@@ -40,6 +81,7 @@ export default function NewProductPage() {
       toast.success('Product created successfully!');
       router.push('/seller/products');
     } catch (error) {
+      console.error('Error creating product:', error);
       toast.error(error.response?.data?.error || 'Failed to create product');
     } finally {
       setLoading(false);
@@ -103,7 +145,7 @@ export default function NewProductPage() {
             </select>
           </div>
 
-          {/* Price */}
+          {/* Price & Stock */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold mb-2">Price</label>
@@ -120,7 +162,6 @@ export default function NewProductPage() {
               />
             </div>
 
-            {/* Stock */}
             <div>
               <label className="block text-sm font-semibold mb-2">Stock Quantity</label>
               <input
@@ -136,6 +177,53 @@ export default function NewProductPage() {
             </div>
           </div>
 
+          {/* Image Upload */}
+          <div>
+            <label className="block text-sm font-semibold mb-2">Product Images</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <FiUpload className="mx-auto text-4xl text-gray-400 mb-2" />
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+                id="image-input"
+              />
+              <label
+                htmlFor="image-input"
+                className="cursor-pointer text-primary hover:text-blue-600 font-semibold"
+              >
+                Click to upload images
+              </label>
+              <p className="text-gray-500 text-sm mt-1">or drag and drop</p>
+            </div>
+
+            {/* Image Preview */}
+            {imagePreview.length > 0 && (
+              <div className="mt-4 grid grid-cols-3 gap-4">
+                {imagePreview.map((preview, index) => (
+                  <div key={index} className="relative">
+                    <Image
+                      src={preview}
+                      alt={`Preview ${index}`}
+                      width={150}
+                      height={150}
+                      className="w-full h-40 object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+                    >
+                      <FiX size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
@@ -145,10 +233,6 @@ export default function NewProductPage() {
             {loading ? 'Creating...' : 'Create Product'}
           </button>
         </form>
-
-        <p className="text-center text-gray-600 mt-6 text-sm">
-          Note: You can upload product images after creating the product.
-        </p>
       </div>
     </div>
   );

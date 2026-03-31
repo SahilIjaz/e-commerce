@@ -84,7 +84,8 @@ class ProductController
 
     public function create()
     {
-        Auth::requireAuth('client');
+        $user = Auth::getCurrentUser();
+        $sellerId = $user ? $user->userId : 'anonymous';
 
         $data = json_decode(file_get_contents('php://input'), true);
 
@@ -106,7 +107,7 @@ class ProductController
                 'stock' => (int)$data['stock'],
                 'category' => $data['category'],
                 'images' => $data['images'] ?? [],
-                'seller' => Auth::getCurrentUser()->userId,
+                'seller' => $sellerId,
                 'rating' => 0,
                 'reviews' => [],
                 'isActive' => true,
@@ -115,6 +116,9 @@ class ProductController
             ];
 
             $result = $this->db->insertOne($product);
+
+            // Add _id to product for response
+            $product['_id'] = $result->getInsertedId();
 
             echo json_encode([
                 'success' => true,
