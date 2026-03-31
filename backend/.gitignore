@@ -1,0 +1,12 @@
+vendor/
+.env
+.env.local
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.swp
+*.swo
+node_modules/
+dist/
+build/
