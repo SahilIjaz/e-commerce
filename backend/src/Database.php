@@ -17,8 +17,6 @@ namespace App;
 
 
 
-
-
 class Database
 {
     private static $instance = null;
