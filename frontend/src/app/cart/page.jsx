@@ -12,7 +12,7 @@ import { FiTrash2, FiArrowLeft } from 'react-icons/fi';
 
 export default function CartPage() {
   const router = useRouter();
-  const { items, total, removeItem, updateQuantity, clearCart } = useCartStore();
+  const { items, total, removeItem, updateQuantity, clearCart, loadCart } = useCartStore();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -21,6 +21,23 @@ export default function CartPage() {
       router.push('/');
     }
   }, [user, router]);
+
+  useEffect(() => {
+    if (user) {
+      // Load cart from backend
+      api.get('/cart')
+        .then((response) => {
+          if (response.data.success && response.data.cart) {
+            const cartItems = response.data.cart.items || [];
+            const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            loadCart(cartItems, cartTotal);
+          }
+        })
+        .catch((err) => {
+          console.error('Failed to load cart:', err);
+        });
+    }
+  }, [user, loadCart]);
 
   const handleCheckout = async () => {
     if (items.length === 0) {
