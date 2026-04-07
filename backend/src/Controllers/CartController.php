@@ -218,4 +218,75 @@ class CartController
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
+
+    public function saveCart()
+    {
+        $user = Auth::requireAuth();
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (!isset($data['items'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Items are required']);
+            return;
+        }
+
+        try {
+            $items = $data['items'];
+            $enrichedItems = [];
+
+            // Validate and enrich items with product info
+            foreach ($items as $item) {
+                if (!isset($item['productId']) || !isset($item['price']) || !isset($item['quantity'])) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Invalid item format']);
+                    return;
+                }
+
+                // Find product to validate it exists and get seller info
+                // The productId should match the _id in the database
+                $product = $this->productDb->findOne(['_id' => $item['productId']]);
+
+                if (!$product) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Product not found']);
+                    return;
+                }
+
+                if (!isset($product['stock']) || $product['stock'] < $item['quantity']) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Insufficient stock for ' . ($product['name'] ?? 'product')]);
+                    return;
+                }
+
+                // Add seller info to item
+                $enrichedItem = $item;
+                $enrichedItem['sellerId'] = $product['seller'] ?? 'anonymous';
+
+                $enrichedItems[] = $enrichedItem;
+            }
+
+            $existingCart = $this->cartDb->findOne(['userId' => $user->userId]);
+
+            if ($existingCart) {
+                $this->cartDb->updateOne(
+                    ['userId' => $user->userId],
+                    ['$set' => ['items' => $enrichedItems]]
+                );
+            } else {
+                $this->cartDb->insertOne([
+                    'userId' => $user->userId,
+                    'items' => $enrichedItems,
+                    'createdAt' => new \MongoDB\BSON\UTCDateTime()
+                ]);
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Cart saved successfully'
+            ]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to save cart: ' . $e->getMessage()]);
+        }
+    }
 }

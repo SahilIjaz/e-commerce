@@ -108,11 +108,19 @@ class OrderController
             $total = 0;
 
             foreach ($cart['items'] as $item) {
-                $product = $this->productDb->findOne(['_id' => new ObjectId($item['productId'])]);
+                // Try to find product - productId should be stored as string from frontend
+                $product = $this->productDb->findOne(['_id' => $item['productId']]);
 
-                if (!$product || $product['stock'] < $item['quantity']) {
+                if (!$product) {
+                    // If not found by direct match, it's an error
                     http_response_code(400);
-                    echo json_encode(['error' => 'Product not available or insufficient stock']);
+                    echo json_encode(['error' => 'Product not found']);
+                    return;
+                }
+
+                if (!isset($product['stock']) || $product['stock'] < $item['quantity']) {
+                    http_response_code(400);
+                    echo json_encode(['error' => 'Insufficient stock for ' . ($product['name'] ?? 'product')]);
                     return;
                 }
 
@@ -148,10 +156,14 @@ class OrderController
 
             // Reduce product stock
             foreach ($cart['items'] as $item) {
-                $this->productDb->updateOne(
-                    ['_id' => new ObjectId($item['productId'])],
-                    ['$inc' => ['stock' => -$item['quantity']]]
-                );
+                $product = $this->productDb->findOne(['_id' => $item['productId']]);
+                if ($product) {
+                    $newStock = ($product['stock'] ?? 0) - $item['quantity'];
+                    $this->productDb->updateOne(
+                        ['_id' => $item['productId']],
+                        ['$set' => ['stock' => max(0, $newStock)]]
+                    );
+                }
             }
 
             echo json_encode([

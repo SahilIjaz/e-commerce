@@ -181,7 +181,26 @@
         }
     ],
     "orders": [],
-    "carts": [],
+    "carts": [
+        {
+            "userId": "id_2_1775560147",
+            "items": [
+                {
+                    "productId": "id_5_1775560539",
+                    "name": "Mobile ",
+                    "price": 100,
+                    "image": "https://via.placeholder.com/400?text=Mobile ",
+                    "quantity": 1
+                }
+            ],
+            "createdAt": {
+                "date": "2026-04-07 11:18:11.697749",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "_id": "id_1_1775560691"
+        }
+    ],
     "categories": [
         {
             "_id": "cat_1",

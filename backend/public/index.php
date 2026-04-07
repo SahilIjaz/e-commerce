@@ -62,6 +62,7 @@ $router->post('/api/products/:id/upload-image', 'ProductController@uploadImage')
 
 // Cart Routes
 $router->get('/api/cart', 'CartController@getCart');
+$router->post('/api/cart', 'CartController@saveCart');
 $router->post('/api/cart/add', 'CartController@addItem');
 $router->put('/api/cart/update/:itemId', 'CartController@updateItem');
 $router->delete('/api/cart/remove/:itemId', 'CartController@removeItem');
