@@ -75,6 +75,25 @@
             },
             "isActive": true,
             "_id": "id_4_1775560508"
+        },
+        {
+            "name": "ali",
+            "email": "ali@gmail.com",
+            "password": "$2y$12$S5f2WZBd9jTKxSfklUfPauLu6Fuw2OOUxkTzfkBFPFsZmLhngMxou",
+            "role": "buyer",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:25:42.818891",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:25:42.818894",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_5_1775561142"
         }
     ],
     "products": [
@@ -158,7 +177,7 @@
             "name": "Mobile ",
             "description": "This is a fake mobile.",
             "price": 100,
-            "stock": 12,
+            "stock": 11,
             "category": "Electronics",
             "images": [
                 "https://via.placeholder.com/400?text=Mobile "
@@ -180,7 +199,37 @@
             "_id": "id_5_1775560539"
         }
     ],
-    "orders": [],
+    "orders": [
+        {
+            "buyerId": "id_5_1775561142",
+            "sellerId": "id_4_1775560508",
+            "items": [
+                {
+                    "productId": "id_5_1775560539",
+                    "name": "Mobile ",
+                    "price": 100,
+                    "quantity": 1,
+                    "image": "https://via.placeholder.com/400?text=Mobile "
+                }
+            ],
+            "total": 100,
+            "status": "pending",
+            "shippingAddress": "User Address",
+            "paymentMethod": "card",
+            "trackingNumber": null,
+            "createdAt": {
+                "date": "2026-04-07 11:25:55.225463",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:25:55.225466",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "_id": "id_1_1775561155"
+        }
+    ],
     "carts": [
         {
             "userId": "id_2_1775560147",
