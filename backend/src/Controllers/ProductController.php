@@ -231,13 +231,42 @@ class ProductController
             $cloudinaryUrl = $this->uploadToCloudinary($fileTmpPath);
 
             $this->db->updateOne(
-                ['_id' => new ObjectId($id)],
-                ['$push' => ['images' => $cloudinaryUrl]]
+                ['_id' => $id],
+                ['$set' => ['images' => array_merge(
+                    $this->db->findOne(['_id' => $id])['images'] ?? [],
+                    [$cloudinaryUrl]
+                )]]
             );
 
             echo json_encode([
                 'success' => true,
                 'message' => 'Image uploaded successfully',
+                'imageUrl' => $cloudinaryUrl
+            ]);
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Upload failed: ' . $e->getMessage()]);
+        }
+    }
+
+    public function uploadImageForCreate()
+    {
+        Auth::requireAuth('client');
+
+        if (!isset($_FILES['file'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Image file is required']);
+            return;
+        }
+
+        try {
+            $file = $_FILES['file'];
+            $fileTmpPath = $file['tmp_name'];
+
+            $cloudinaryUrl = $this->uploadToCloudinary($fileTmpPath);
+
+            echo json_encode([
+                'success' => true,
                 'imageUrl' => $cloudinaryUrl
             ]);
         } catch (\Exception $e) {
@@ -252,24 +281,35 @@ class ProductController
         $apiKey = $_ENV['CLOUDINARY_API_KEY'];
         $apiSecret = $_ENV['CLOUDINARY_API_SECRET'];
 
-        $timestamp = time();
-        $publicId = 'ecommerce_' . uniqid();
-
-        $postData = [
-            'file' => fopen($filePath, 'r'),
-            'public_id' => $publicId,
-            'api_key' => $apiKey,
-            'timestamp' => $timestamp,
-            'signature' => hash_hmac('sha1', "public_id={$publicId}&timestamp={$timestamp}", $apiSecret)
-        ];
-
         $client = new \GuzzleHttp\Client();
-        $response = $client->post("https://api.cloudinary.com/v1_1/{$cloudName}/image/upload", [
-            'multipart' => $this->buildMultipartData($postData)
-        ]);
 
-        $result = json_decode($response->getBody(), true);
-        return $result['secure_url'];
+        try {
+            // Use basic authentication with API key and secret
+            $response = $client->post(
+                "https://api.cloudinary.com/v1_1/{$cloudName}/image/upload",
+                [
+                    'auth' => [$apiKey, $apiSecret],
+                    'multipart' => [
+                        [
+                            'name' => 'file',
+                            'contents' => fopen($filePath, 'r')
+                        ]
+                    ],
+                    'timeout' => 30
+                ]
+            );
+
+            $result = json_decode($response->getBody(), true);
+
+            if (isset($result['secure_url'])) {
+                return $result['secure_url'];
+            } else {
+                throw new \Exception('No secure_url in Cloudinary response');
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $errorBody = $e->getResponse()->getBody()->getContents();
+            throw new \Exception('Cloudinary API Error: ' . $errorBody);
+        }
     }
 
     private function buildMultipartData($data)

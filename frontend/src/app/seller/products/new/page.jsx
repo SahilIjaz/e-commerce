@@ -48,26 +48,28 @@ export default function NewProductPage() {
       };
       reader.readAsDataURL(file);
 
-      // Upload to Cloudinary
+      // Upload to backend (which will upload to Cloudinary)
       try {
         const formDataObj = new FormData();
         formDataObj.append('file', file);
-        formDataObj.append('upload_preset', 'shophub_unsigned'); // Using unsigned upload for simplicity
 
-        const cloudinaryResponse = await fetch(
-          'https://api.cloudinary.com/v1_1/dbwuumsdy/image/upload',
-          {
-            method: 'POST',
-            body: formDataObj,
-          }
-        );
+        // For now, use a temporary product ID or upload without product ID
+        // The backend will handle the actual Cloudinary upload
+        const uploadResponse = await fetch('http://localhost:8000/api/upload-image', {
+          method: 'POST',
+          body: formDataObj,
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+          },
+        });
 
-        if (!cloudinaryResponse.ok) {
-          throw new Error('Cloudinary upload failed');
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+          throw new Error(uploadData.error || 'Upload failed');
         }
 
-        const cloudinaryData = await cloudinaryResponse.json();
-        const imageUrl = cloudinaryData.secure_url;
+        const imageUrl = uploadData.imageUrl;
 
         setFormData((prev) => ({
           ...prev,
@@ -77,13 +79,7 @@ export default function NewProductPage() {
         toast.success('Image uploaded successfully!');
       } catch (error) {
         console.error('Upload error:', error);
-        // Fallback to placeholder if Cloudinary fails
-        const placeholderUrl = `https://via.placeholder.com/400?text=${formData.name || 'Product'}+${Date.now()}`;
-        setFormData((prev) => ({
-          ...prev,
-          images: [...prev.images, placeholderUrl],
-        }));
-        toast.success('Image added (using placeholder)');
+        toast.error(`Upload failed: ${error.message}`);
       }
     }
 
