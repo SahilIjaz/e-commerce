@@ -177,7 +177,7 @@
             "name": "Mobile ",
             "description": "This is a fake mobile.",
             "price": 100,
-            "stock": 11,
+            "stock": 10,
             "category": "Electronics",
             "images": [
                 "https://via.placeholder.com/400?text=Mobile "
@@ -228,6 +228,35 @@
                 "timezone": "UTC"
             },
             "_id": "id_1_1775561155"
+        },
+        {
+            "buyerId": "id_5_1775561142",
+            "sellerId": "id_4_1775560508",
+            "items": [
+                {
+                    "productId": "id_5_1775560539",
+                    "name": "Mobile ",
+                    "price": 100,
+                    "quantity": 1,
+                    "image": "https://via.placeholder.com/400?text=Mobile "
+                }
+            ],
+            "total": 100,
+            "status": "pending",
+            "shippingAddress": "User Address",
+            "paymentMethod": "card",
+            "trackingNumber": null,
+            "createdAt": {
+                "date": "2026-04-07 11:28:22.188296",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:28:22.188297",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "_id": "id_2_1775561302"
         }
     ],
     "carts": [

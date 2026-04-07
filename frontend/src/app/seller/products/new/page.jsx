@@ -33,6 +33,7 @@ export default function NewProductPage() {
 
   const handleImageSelect = async (e) => {
     const files = Array.from(e.target.files);
+    setUploadingImage(true);
 
     for (const file of files) {
       if (!file.type.startsWith('image/')) {
@@ -47,16 +48,46 @@ export default function NewProductPage() {
       };
       reader.readAsDataURL(file);
 
-      // Simulate upload (in real app, would upload to Cloudinary)
-      // For now, use placeholder image URL
-      const imageUrl = `https://via.placeholder.com/400?text=${formData.name || 'Product'}`;
-      setFormData((prev) => ({
-        ...prev,
-        images: [...prev.images, imageUrl],
-      }));
+      // Upload to Cloudinary
+      try {
+        const formDataObj = new FormData();
+        formDataObj.append('file', file);
+        formDataObj.append('upload_preset', 'shophub_unsigned'); // Using unsigned upload for simplicity
 
-      toast.success('Image added!');
+        const cloudinaryResponse = await fetch(
+          'https://api.cloudinary.com/v1_1/dbwuumsdy/image/upload',
+          {
+            method: 'POST',
+            body: formDataObj,
+          }
+        );
+
+        if (!cloudinaryResponse.ok) {
+          throw new Error('Cloudinary upload failed');
+        }
+
+        const cloudinaryData = await cloudinaryResponse.json();
+        const imageUrl = cloudinaryData.secure_url;
+
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, imageUrl],
+        }));
+
+        toast.success('Image uploaded successfully!');
+      } catch (error) {
+        console.error('Upload error:', error);
+        // Fallback to placeholder if Cloudinary fails
+        const placeholderUrl = `https://via.placeholder.com/400?text=${formData.name || 'Product'}+${Date.now()}`;
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, placeholderUrl],
+        }));
+        toast.success('Image added (using placeholder)');
+      }
     }
+
+    setUploadingImage(false);
   };
 
   const removeImage = (index) => {
@@ -69,10 +100,16 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.images.length === 0) {
+      toast.error('Please add at least one image');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await api.post('/products', {
+      await api.post('/products', {
         ...formData,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
