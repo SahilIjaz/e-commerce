@@ -64,7 +64,8 @@ class ProductController
                 return;
             }
 
-            $product = $this->db->findOne(['_id' => new ObjectId($id)]);
+            // Try to find by direct ID match (since we use string IDs in file-based DB)
+            $product = $this->db->findOne(['_id' => $id]);
 
             if (!$product) {
                 http_response_code(404);
