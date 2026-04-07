@@ -37,6 +37,44 @@
             },
             "isActive": true,
             "_id": "id_2_1775560147"
+        },
+        {
+            "name": "Sahil Ijaz",
+            "email": "hssahil2913@gmail.com",
+            "password": "$2y$12$3E7Nqf76uqjK1c/C0LbTV.fSVjk9O3dfD3HpqoYJyxbsvUmYMh/i2",
+            "role": "buyer",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:14:49.367655",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:14:49.367657",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_3_1775560489"
+        },
+        {
+            "name": "Ali",
+            "email": "developersahil199@gmail.com",
+            "password": "$2y$12$w63CSFwvjanVuXz1/C970.PX1vSBXxe4xhneC1VFLKB4JzIvd7hti",
+            "role": "client",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:15:08.825904",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:15:08.825906",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_4_1775560508"
         }
     ],
     "products": [
@@ -115,6 +153,31 @@
                 "timezone_type": 3,
                 "timezone": "UTC"
             }
+        },
+        {
+            "name": "Mobile ",
+            "description": "This is a fake mobile.",
+            "price": 100,
+            "stock": 12,
+            "category": "Electronics",
+            "images": [
+                "https://via.placeholder.com/400?text=Mobile "
+            ],
+            "seller": "id_4_1775560508",
+            "rating": 0,
+            "reviews": [],
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-04-07 11:15:39.954001",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:15:39.954004",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "_id": "id_5_1775560539"
         }
     ],
     "orders": [],

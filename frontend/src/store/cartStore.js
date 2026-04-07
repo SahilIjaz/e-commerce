@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import api from '@/lib/api';
 
 const useCartStore = create((set, get) => ({
   items: [],
@@ -29,6 +30,12 @@ const useCartStore = create((set, get) => ({
       }
 
       const newTotal = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      // Save cart to backend
+      api.post('/cart', { items: newItems }).catch((err) => {
+        console.error('Failed to save cart:', err);
+      });
+
       return { items: newItems, total: newTotal };
     });
   },
@@ -37,6 +44,12 @@ const useCartStore = create((set, get) => ({
     set((state) => {
       const newItems = state.items.filter((item) => item.productId !== productId);
       const newTotal = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      // Save cart to backend
+      api.post('/cart', { items: newItems }).catch((err) => {
+        console.error('Failed to save cart:', err);
+      });
+
       return { items: newItems, total: newTotal };
     });
   },
@@ -47,12 +60,22 @@ const useCartStore = create((set, get) => ({
         item.productId === productId ? { ...item, quantity } : item
       );
       const newTotal = newItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      // Save cart to backend
+      api.post('/cart', { items: newItems }).catch((err) => {
+        console.error('Failed to save cart:', err);
+      });
+
       return { items: newItems, total: newTotal };
     });
   },
 
   clearCart: () => {
     set({ items: [], total: 0 });
+  },
+
+  loadCart: (items, total) => {
+    set({ items, total });
   },
 }));
 
