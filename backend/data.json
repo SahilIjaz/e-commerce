@@ -1,5 +1,44 @@
 {
-    "users": [],
+    "users": [
+        {
+            "name": "Test User",
+            "email": "testuser@example.com",
+            "password": "$2y$12$eIzH5/gN8w8ikKK4rPpMT.bpZbquEXU84Mv.Aj/QhS.NWNDKLZCV.",
+            "role": "buyer",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:08:05.466268",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:08:05.466285",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_1_1775560085"
+        },
+        {
+            "name": "sahil",
+            "email": "sahil@gmail.com",
+            "password": "$2y$12$wibm4D19rBEOHVgpX1YmBeijTAMyJ0ALj0ZPV0FcW3ySk5/OsNqUG",
+            "role": "buyer",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:09:07.204558",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:09:07.204561",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_2_1775560147"
+        }
+    ],
     "products": [
         {
             "_id": "id_1_1774965896",
