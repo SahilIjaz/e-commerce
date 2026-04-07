@@ -59,7 +59,8 @@ class OrderController
         }
 
         try {
-            $order = $this->orderDb->findOne(['_id' => new ObjectId($id)]);
+            // Try to find by direct ID match (since we use string IDs in file-based DB)
+            $order = $this->orderDb->findOne(['_id' => $id]);
 
             if (!$order) {
                 http_response_code(404);
@@ -190,7 +191,8 @@ class OrderController
         }
 
         try {
-            $order = $this->orderDb->findOne(['_id' => new ObjectId($id)]);
+            // Try to find by direct ID match (since we use string IDs in file-based DB)
+            $order = $this->orderDb->findOne(['_id' => $id]);
 
             if (!$order) {
                 http_response_code(404);
@@ -206,7 +208,7 @@ class OrderController
             }
 
             $this->orderDb->updateOne(
-                ['_id' => new ObjectId($id)],
+                ['_id' => $id],
                 ['$set' => [
                     'status' => $data['status'],
                     'trackingNumber' => $data['trackingNumber'] ?? null,
