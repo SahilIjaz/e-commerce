@@ -265,10 +265,10 @@ export default function NewProductPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || uploadingImage}
             className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition disabled:bg-gray-400 mt-6"
           >
-            {loading ? 'Creating...' : 'Create Product'}
+            {loading ? 'Creating...' : uploadingImage ? 'Uploading images...' : 'Create Product'}
           </button>
         </form>
       </div>

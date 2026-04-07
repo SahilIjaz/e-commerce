@@ -94,6 +94,25 @@
             },
             "isActive": true,
             "_id": "id_5_1775561142"
+        },
+        {
+            "name": "ahmad",
+            "email": "ahmad@gmail.com",
+            "password": "$2y$12$e4hcMO7tbhbFQKNYHA.Vhe41nc1l51HmM5ATmx19Mvu9sb.Cl44ea",
+            "role": "client",
+            "profileImage": null,
+            "createdAt": {
+                "date": "2026-04-07 11:32:38.124495",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:32:38.124497",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "isActive": true,
+            "_id": "id_6_1775561558"
         }
     ],
     "products": [
@@ -197,6 +216,31 @@
                 "timezone": "UTC"
             },
             "_id": "id_5_1775560539"
+        },
+        {
+            "name": "AHmad's product ",
+            "description": "This is a dumy item.",
+            "price": 199.97,
+            "stock": 1122,
+            "category": "Sports",
+            "images": [
+                "https://via.placeholder.com/400?text=AHmad's product +1775561588214"
+            ],
+            "seller": "id_6_1775561558",
+            "rating": 0,
+            "reviews": [],
+            "isActive": true,
+            "createdAt": {
+                "date": "2026-04-07 11:33:15.186334",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "updatedAt": {
+                "date": "2026-04-07 11:33:15.186335",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "_id": "id_6_1775561595"
         }
     ],
     "orders": [
