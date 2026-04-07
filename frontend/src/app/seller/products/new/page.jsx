@@ -226,12 +226,13 @@ export default function NewProductPage() {
                 onChange={handleImageSelect}
                 className="hidden"
                 id="image-input"
+                disabled={uploadingImage}
               />
               <label
                 htmlFor="image-input"
-                className="cursor-pointer text-primary hover:text-blue-600 font-semibold"
+                className={`cursor-pointer font-semibold ${uploadingImage ? 'text-gray-400' : 'text-primary hover:text-blue-600'}`}
               >
-                Click to upload images
+                {uploadingImage ? 'Uploading...' : 'Click to upload images'}
               </label>
               <p className="text-gray-500 text-sm mt-1">or drag and drop</p>
             </div>
