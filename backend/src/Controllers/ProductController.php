@@ -157,7 +157,7 @@ class ProductController
             $updateData['updatedAt'] = new \MongoDB\BSON\UTCDateTime();
 
             $result = $this->db->updateOne(
-                ['_id' => new ObjectId($id)],
+                ['_id' => $id],
                 ['$set' => $updateData]
             );
 
@@ -189,7 +189,7 @@ class ProductController
         }
 
         try {
-            $result = $this->db->deleteOne(['_id' => new ObjectId($id)]);
+            $result = $this->db->deleteOne(['_id' => $id]);
 
             if ($result->getDeletedCount() === 0) {
                 http_response_code(404);
